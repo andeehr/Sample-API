@@ -1,0 +1,15 @@
+﻿namespace Sample.Common.Exceptions
+{
+    public class DomainException : Exception
+    {
+        public DomainException(string errorMessage)
+            : base(errorMessage)
+        {
+        }
+
+        public DomainException(string errorMessage, Exception innerException)
+            : base(errorMessage, innerException)
+        {
+        }
+    }
+}

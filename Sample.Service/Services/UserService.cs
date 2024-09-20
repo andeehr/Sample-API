@@ -1,0 +1,52 @@
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
+using Sample.Common.DTOs.Requests;
+using Sample.Common.DTOs.Responses;
+using Sample.Common.Exceptions;
+using Sample.Data.Entities;
+using Sample.Data.Persistence;
+
+namespace Sample.Core.Services
+{
+    public interface IUserService
+    {
+        Task<UserResponse> LoginAsync(string user, string password);
+
+        Task RegisterAsync(UserRequest request);
+    }
+
+    public class UserService : BaseService<UserService>, IUserService
+    {
+        private readonly IUserRepository _userRepository;
+
+        public UserService(
+            IUserRepository userRepository,
+            IMapper mapper,
+            ILogger<UserService> logger) : base(logger, mapper)
+        {
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        }
+
+        public async Task<UserResponse> LoginAsync(string username, string password)
+        {
+            var user = await _userRepository.GetByUsernameAsync(username);
+
+            if (!IsValidPassword(password, user.Password))
+                throw new DomainException("Wrong password");
+
+            return _mapper.Map<UserResponse>(user);
+        }
+
+        public static bool IsValidPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
+
+        public async Task RegisterAsync(UserRequest request)
+        {
+            request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var user = _mapper.Map<User>(request);
+            //await _userRepository.AddAsync(user);
+        }
+    }
+}
