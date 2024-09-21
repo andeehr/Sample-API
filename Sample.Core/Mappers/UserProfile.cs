@@ -5,7 +5,7 @@ using Sample.Data.Entities;
 
 namespace Sample.Core.Mappers
 {
-    public class UserProfile : Profile
+    public class UserProfile : PagedBaseProfile<User, UserResponse>
     {
         public UserProfile()
         {

@@ -20,7 +20,8 @@
         "JWT_ISSUER": "jwt-issuer",
         "JWT_AUDIENCE": "jwt-audience",
         "JWT_EXPIRATION": "168",
-        "JWT_ENABLED": "true"
+        "JWT_ENABLED": "true",
+        "LIMIT_ROWS": "5000"
       }
     }
   }

@@ -56,6 +56,7 @@ builder.Services.AddScoped<IJwtTokenWrapper, JwtTokenWrapper>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddTransient<JwtMiddleware>();
 builder.Services.AddTransient<JwtSecurityTokenHandler>();
+builder.Services.Configure<FilterQueryOptions>(config.GetSection(nameof(FilterQueryOptions)));
 
 var app = builder.Build();
 

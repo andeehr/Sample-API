@@ -28,5 +28,9 @@ namespace Sample.Api.Controllers
         [HttpPost("login")]
         public async Task<UserResponse> Login([FromBody] LoginRequest request)
             => await _authManager.AuthenticateAsync(HttpContext, request.Username, request.Password);
+
+        [HttpGet]
+        public async Task<PagedResult<UserResponse>> GetAll([FromQuery] UserFilter request)
+            => await _userService.GetAllByFilters(request);
     }
 }

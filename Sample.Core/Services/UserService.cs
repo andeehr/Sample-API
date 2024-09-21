@@ -42,5 +42,11 @@ namespace Sample.Core.Services
             var user = _mapper.Map<User>(request);
             await _userRepository.AddAsync(user);
         }
+
+        public async Task<PagedResult<UserResponse>> GetAllByFilters(UserFilter request)
+        {
+            var data = await _userRepository.GetPaged(request);
+            return _mapper.Map<PagedResult<UserResponse>>(data);
+        }
     }
 }
