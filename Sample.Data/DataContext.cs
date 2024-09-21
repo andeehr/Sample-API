@@ -39,6 +39,34 @@ namespace Sample.Data
                 entity.Property(e => e.FirstName).HasMaxLength(255);
                 entity.Property(e => e.LastName).HasMaxLength(255);
                 entity.Property(e => e.Password).HasMaxLength(450);
+
+                entity.HasOne(e => e.Role)
+                    .WithMany(pr => pr.Users)
+                    .HasForeignKey(e => e.RoleId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_User_RoleId");
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasIndex(e => e.Description, "UQ_Role_Description")
+                    .IsUnique();
+
+                entity.Property(e => e.Description).HasMaxLength(255);
+
+                entity.HasMany(e => e.Permissions)
+                    .WithMany(pr => pr.Roles);
+            });
+
+            modelBuilder.Entity<Permission>(entity =>
+            {
+                entity.HasIndex(e => e.Description, "UQ_Permission_Description")
+                    .IsUnique();
+
+                entity.Property(e => e.Description).HasMaxLength(255);
+
+                entity.HasMany(e => e.Roles)
+                    .WithMany(pr => pr.Permissions);
             });
         }
     }
