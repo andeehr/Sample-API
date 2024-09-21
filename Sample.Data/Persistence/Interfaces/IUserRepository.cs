@@ -2,7 +2,7 @@
 
 namespace Sample.Data.Persistence.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : ICrudRepository<User, long>
     {
         public Task<User> GetByUsernameAsync(string username);
     }

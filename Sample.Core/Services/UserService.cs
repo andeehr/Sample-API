@@ -40,7 +40,7 @@ namespace Sample.Core.Services
         {
             request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var user = _mapper.Map<User>(request);
-            //await _userRepository.AddAsync(user);
+            await _userRepository.AddAsync(user);
         }
     }
 }

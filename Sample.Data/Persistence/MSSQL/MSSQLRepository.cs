@@ -98,7 +98,7 @@ namespace Sample.Data.Persistence.MSSQL
 
         protected IQueryable<T> GetAll()
         {
-            return DbSet.Where(x => !x.Deleted).AsQueryable();
+            return DbSet.Where(x => x.DeletedAt == null).AsQueryable();
         }
     }
 }

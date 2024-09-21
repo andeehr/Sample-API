@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Sample.Core.Mappers;
 using Sample.Core.Services;
 using Sample.Core.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sample.Core.Config
 {
@@ -18,7 +14,7 @@ namespace Sample.Core.Config
             {
                 cfg.AllowNullCollections = true;
 
-                // I will add profiles here
+                cfg.AddProfile<UserProfile>();
             });
 
             var mapper = config.CreateMapper();
