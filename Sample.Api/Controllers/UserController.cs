@@ -1,6 +1,8 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using Sample.Api.Config;
 using Sample.Api.Helpers;
+using Sample.Common.Config.Options.Constants;
 using Sample.Common.DTOs.Requests;
 using Sample.Common.DTOs.Responses;
 using Sample.Core.Services.Interfaces;
@@ -30,6 +32,7 @@ namespace Sample.Api.Controllers
             => await _authManager.AuthenticateAsync(HttpContext, request.Username, request.Password);
 
         [HttpGet]
+        [Authorize(Permission.User.List)]
         public async Task<PagedResult<UserResponse>> GetAll([FromQuery] UserFilter request)
             => await _userService.GetAllByFilters(request);
     }
