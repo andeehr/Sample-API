@@ -4,7 +4,7 @@ GO
 DECLARE @now DATETIME = GETDATE();
 
 -- add example roles
-INSERT INTO [dbo].[Role]
+INSERT INTO [dbo].[Roles]
            ([Description]
            ,[CreatedAt]
            ,[UpdatedAt]
@@ -20,7 +20,7 @@ INSERT INTO [dbo].[Role]
            ,NULL)
 
 -- add example permissions
-INSERT INTO [dbo].[Permission]
+INSERT INTO [dbo].[Permissions]
            ([Description]
            ,[CreatedAt]
            ,[UpdatedAt]
@@ -40,20 +40,20 @@ DECLARE @SuperUserId INT;
 DECLARE @AdminId INT;
 
 SELECT @SuperUserId = Id
-FROM [dbo].[Role]
+FROM [dbo].[Roles]
 WHERE Description = 'SuperUser';
 
 SELECT @AdminId = Id
-FROM [dbo].[Role]
+FROM [dbo].[Roles]
 WHERE Description = 'Administrator';
 
 INSERT INTO [dbo].[PermissionRole] (PermissionsId, RolesId)
 SELECT p.Id, @SuperUserId
-FROM [dbo].[Permission] p;
+FROM [dbo].[Permissions] p;
 
 INSERT INTO [dbo].[PermissionRole] (PermissionsId, RolesId)
 SELECT p.Id, @AdminId
-FROM [dbo].[Permission] p
+FROM [dbo].[Permissions] p
 WHERE p.Description = 'user.manage'
 
 GO

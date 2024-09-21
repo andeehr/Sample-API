@@ -64,7 +64,7 @@ namespace Sample.Data.Migrations
                     b.HasIndex(new[] { "Description" }, "UQ_Permission_Description")
                         .IsUnique();
 
-                    b.ToTable("Permission");
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("Sample.Data.Entities.Role", b =>
@@ -94,7 +94,7 @@ namespace Sample.Data.Migrations
                     b.HasIndex(new[] { "Description" }, "UQ_Role_Description")
                         .IsUnique();
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Sample.Data.Entities.User", b =>
