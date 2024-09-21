@@ -55,11 +55,18 @@ namespace Sample.Data.Persistence.MSSQL.Extensions
 
         private static bool IsPropertyMapped<T>(Expression<Func<T, object>> expression)
         {
-            var propertyName = GetPropertyName(expression);
-            var propertyInfo = typeof(T).GetProperty(propertyName);
-            var notMappedAttribute = propertyInfo?.GetCustomAttribute<NotMappedAttribute>();
+            try
+            {
+                var propertyName = GetPropertyName(expression);
+                var propertyInfo = typeof(T).GetProperty(propertyName);
+                var notMappedAttribute = propertyInfo?.GetCustomAttribute<NotMappedAttribute>();
 
-            return notMappedAttribute is null;
+                return notMappedAttribute is null;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static string GetPropertyName<T>(Expression<Func<T, object>> expression)

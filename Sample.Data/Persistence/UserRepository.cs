@@ -26,7 +26,8 @@ namespace Sample.Data.Persistence
                 { "username", p => p.Username },
                 { "firstname", p => p.FirstName },
                 { "lastname", p => p.LastName },
-                { "role", p => p.RoleId }
+                { "role", p => p.RoleId },
+                { "fullname", p => $"{p.LastName}, {p.FirstName}" }
             };
 
         public async Task<User> GetByUsernameAsync(string username)
