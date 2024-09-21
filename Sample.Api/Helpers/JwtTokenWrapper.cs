@@ -34,7 +34,7 @@ namespace Sample.Api.Helpers
                 new(ClaimTypes.Role, role)
             };
 
-            claims.AddRange(permissions.Select(permission => new Claim("permission", permission)));
+            claims.AddRange(permissions.Select(permission => new Claim("permissions", permission)));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.JwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

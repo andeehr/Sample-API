@@ -7,7 +7,20 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5149",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MS_HOST": "host",
+        "MS_USER": "user",
+        "MS_PASS": "password",
+        "MS_DATABASE": "databse-name",
+        "MS_COMMAND_TIMEOUT": "90",
+        "MS_ENCRYPT": "false",
+        "LOG_PATH": "log-path",
+        "MS_TRUSTED": "false",
+        "JWT_KEY": "jwt-key",
+        "JWT_ISSUER": "jwt-issuer",
+        "JWT_AUDIENCE": "jwt-audience",
+        "JWT_EXPIRATION": "168",
+        "JWT_ENABLED": "true"
       }
     }
   }
