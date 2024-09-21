@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sample.Api.Helpers;
 using Sample.Common.DTOs.Requests;
 using Sample.Common.DTOs.Responses;
-using Sample.Core.Services;
+using Sample.Core.Services.Interfaces;
 
 namespace Sample.Api.Controllers
 {

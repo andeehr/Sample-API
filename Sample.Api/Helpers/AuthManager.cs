@@ -1,5 +1,5 @@
 ﻿using Sample.Common.DTOs.Responses;
-using Sample.Core.Services;
+using Sample.Core.Services.Interfaces;
 
 namespace Sample.Api.Helpers
 {

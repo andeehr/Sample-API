@@ -3,18 +3,12 @@ using Microsoft.Extensions.Logging;
 using Sample.Common.DTOs.Requests;
 using Sample.Common.DTOs.Responses;
 using Sample.Common.Exceptions;
+using Sample.Core.Services.Interfaces;
 using Sample.Data.Entities;
-using Sample.Data.Persistence;
+using Sample.Data.Persistence.Interfaces;
 
 namespace Sample.Core.Services
 {
-    public interface IUserService
-    {
-        Task<UserResponse> LoginAsync(string user, string password);
-
-        Task RegisterAsync(UserRequest request);
-    }
-
     public class UserService : BaseService<UserService>, IUserService
     {
         private readonly IUserRepository _userRepository;
