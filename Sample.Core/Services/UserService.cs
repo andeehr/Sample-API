@@ -12,13 +12,16 @@ namespace Sample.Core.Services
     public class UserService : BaseService<UserService>, IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IValidatorService _validatorService;
 
         public UserService(
             IUserRepository userRepository,
             IMapper mapper,
+            IValidatorService validatorService,
             ILogger<UserService> logger) : base(logger, mapper)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _validatorService = validatorService ?? throw new ArgumentNullException(nameof(validatorService));
         }
 
         public async Task<UserResponse> LoginAsync(string username, string password)
@@ -38,6 +41,7 @@ namespace Sample.Core.Services
 
         public async Task RegisterAsync(UserRequest request)
         {
+            _validatorService.Validate(request);
             request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var user = _mapper.Map<User>(request);
             await _userRepository.AddAsync(user);

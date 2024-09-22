@@ -25,6 +25,7 @@ namespace Sample.Core.Config
 
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
+            services.AddScoped<IValidatorService, ValidatorService>();
             services.AddScoped<IUserService, UserService>();
 
             return services;
