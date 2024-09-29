@@ -31,11 +31,11 @@ namespace Sample.Api.Middlewares
                 }
                 catch (SecurityTokenExpiredException)
                 {
-                    throw new UnauthorizedException("Token expirado");
+                    throw new UnauthorizedException("Token expired");
                 }
                 catch (Exception ex)
                 {
-                    throw new UnauthorizedException($"Ocurrió un error en la lectura del token: {ex.Message}");
+                    throw new UnauthorizedException($"An error occurred while reading the token: {ex.Message}");
                 }
             }
             await next(context);

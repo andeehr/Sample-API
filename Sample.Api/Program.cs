@@ -23,6 +23,8 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(config)
     .CreateLogger();
 
+builder.Host.UseSerilog();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

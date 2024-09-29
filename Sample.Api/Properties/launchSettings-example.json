@@ -14,14 +14,15 @@
         "MS_DATABASE": "databse-name",
         "MS_COMMAND_TIMEOUT": "90",
         "MS_ENCRYPT": "false",
-        "LOG_PATH": "log-path",
+        "LOG_PATH": "log-path/file.json",
         "MS_TRUSTED": "false",
         "JWT_KEY": "jwt-key",
         "JWT_ISSUER": "jwt-issuer",
         "JWT_AUDIENCE": "jwt-audience",
         "JWT_EXPIRATION": "168",
         "JWT_ENABLED": "true",
-        "LIMIT_ROWS": "5000"
+        "LIMIT_ROWS": "5000",
+        "LOG_LEVEL": "Information"
       }
     }
   }
