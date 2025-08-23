@@ -1,14 +1,13 @@
 using Asp.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Sample.Api.Config;
 using Sample.Api.Helpers;
+using Sample.Core.Config;
 using Sample.Data;
 using Sample.Data.Config;
-using Sample.Core.Config;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
-using Sample.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,7 +55,6 @@ builder.Services.AddApiAuthentication(jwtOptions!);
 
 builder.Services.AddScoped<IJwtTokenWrapper, JwtTokenWrapper>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
-builder.Services.AddTransient<JwtMiddleware>();
 builder.Services.AddTransient<JwtSecurityTokenHandler>();
 builder.Services.Configure<FilterQueryOptions>(config.GetSection(nameof(FilterQueryOptions)));
 
@@ -75,8 +73,6 @@ if (app.Environment.IsDevelopment())
 app.UseAPIExceptionHandler();
 
 app.UseHttpsRedirection();
-
-app.UseMiddleware<JwtMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

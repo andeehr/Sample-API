@@ -31,7 +31,6 @@ namespace Sample.Data.Persistence.MSSQL
                 }
                 catch (DbUpdateException ex)
                 {
-                    // TODO: fix this
                     if (ex.InnerException is SqlException innerException && innerException.Number == 2601)
                     {
                         var errorMessage = innerException.Message;
@@ -42,7 +41,7 @@ namespace Sample.Data.Persistence.MSSQL
                         if (start != -1 && end != -1)
                             duplicateValue = errorMessage.Substring(start + 1, end - start - 1);
 
-                        throw new DomainException($"An error occurred while saving the record: The value '{duplicateValue}' already exists and cannot be repeated");
+                        throw new DuplicateKeyException($"An error occurred while saving the record: The value '{duplicateValue}' already exists and cannot be repeated");
                     }
 
                     throw new Exception("Unhandled duplicate key error", ex);
@@ -67,7 +66,7 @@ namespace Sample.Data.Persistence.MSSQL
                 DbSet.Attach(entity);
 
             entity.Update();
-            await Task.FromResult(DbSet.Update(entity));
+            DbSet.Update(entity);
             await SaveChanges(saveChanges);
         }
 

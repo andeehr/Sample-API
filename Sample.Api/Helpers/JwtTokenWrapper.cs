@@ -9,7 +9,7 @@ namespace Sample.Api.Helpers
 {
     public interface IJwtTokenWrapper
     {
-        string WriteJwtToken(string username, string rol, IEnumerable<string> permisos);
+        string WriteJwtToken(string username, string rol, IEnumerable<string> permissions);
 
         ClaimsPrincipal ReadJwtToken(string token);
     }

@@ -24,9 +24,7 @@ namespace Sample.Data
             var connectionstring = Configuration?.GetConnectionString("DataContext");
 
             if (!options.IsConfigured)
-            {
                 options.UseSqlServer(connectionstring);
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

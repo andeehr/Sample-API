@@ -32,8 +32,8 @@ namespace Sample.Data.Persistence.MSSQL
         {
             var query = FilterQuery(GetAll(), filter);
             var rows = query.Count();
-            var result = query.Take(_filterOptions.LimitRows).Sort(filter, Sorting);
-            return await GetPaged(result.Item1, filter.PageNumber, filter.PageSize, result.Item2, rows);
+            (var sortedQuery, var inMemory) = query.Take(_filterOptions.LimitRows).Sort(filter, Sorting);
+            return await GetPaged(sortedQuery, filter.PageNumber, filter.PageSize, inMemory, rows);
         }
 
         private static async Task<PagedResult<T>> GetPaged(IQueryable<T> query, int pageNumber, int pageSize, bool inMemory, int realRows)

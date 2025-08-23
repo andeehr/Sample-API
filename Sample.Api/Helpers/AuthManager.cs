@@ -23,7 +23,16 @@ namespace Sample.Api.Helpers
         {
             var user = await _usuarioService.LoginAsync(username, password);
             var token = _jwtTokenWrapper.WriteJwtToken(username, user.Role, user.Permissions);
-            httpContext.Response.Headers.Append("Authorization", $"Bearer {token}");
+
+            var authCookie = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddHours(24),
+            };
+
+            httpContext.Response.Cookies.Append("auth-token", token, authCookie);
             return user;
         }
     }
