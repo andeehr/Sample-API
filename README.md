@@ -48,14 +48,14 @@ The login endpoint delegates authentication to the **AuthManager** helper servic
 - Generates a **JWT token** and includes it in the response header.
 
 For token handling, a wrapper is implemented to manage **JWT token** creation and validation.
-
+- The **Authorize** annotation helps determine if the user is authenticated and has the necessary permissions to access specific endpoints. This filter ensures that the user’s token is valid and that their roles and permissions are correctly mapped before accessing protected resources.
 ---
 
 ### 🧑‍💻 Get Users
 
 #### **Endpoint:** `GET http://baseUrl/v1/user?{filters}`
 
-This endpoint is secured with the **Authorize** annotation (a custom, configurable filter). You can filter the users by passing query parameters. If no parameters are provided, all users are returned.
+You can filter the users by passing query parameters. If no parameters are provided, all users are returned.
 
 #### Example Query Parameters:
 - `pageNumber`: The page number to retrieve.
@@ -93,12 +93,3 @@ GET http://baseUrl/v1/user?pageNumber=1&pageSize=10&sortingProperty=firstName
 
 The response includes:
 - `PagedResult`: Contains the requested data, the total number of rows, and the number of rows shown.
-
----
-
-### 🔒 JWT Middleware and Filter Usage
-
-A custom **middleware** verifies user authentication by checking the JWT token. The token data is then mapped to a global variable in the context.
-
-- The **Authorize** annotation helps determine if the user is authenticated and has the necessary permissions to access specific endpoints.
-- The middleware and the filter ensures that the user’s token is valid and that their roles and permissions are correctly mapped before accessing protected resources.
