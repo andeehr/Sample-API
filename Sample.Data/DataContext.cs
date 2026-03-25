@@ -84,17 +84,17 @@ namespace Sample.Data
 
             // Permissions
             modelBuilder.Entity<Permission>().HasData(
-                new Permission("read", 1),
-                new Permission("write", 2)
+                new Permission("user.list", 1),
+                new Permission("user.manage", 2)
             );
 
             modelBuilder.Entity<Role>()
                 .HasMany(r => r.Permissions)
                 .WithMany(p => p.Roles)
                 .UsingEntity(j => j.HasData(
-                    new { RolesId = 1, PermissionsId = 1 }, // Admin - Read
-                    new { RolesId = 1, PermissionsId = 2 }, // Admin - Write
-                    new { RolesId = 2, PermissionsId = 1 }  // User - Read
+                    new { RolesId = 1, PermissionsId = 1 }, // Admin - List
+                    new { RolesId = 1, PermissionsId = 2 }, // Admin - Manage
+                    new { RolesId = 2, PermissionsId = 1 }  // User - List
                 ));
         }
     }

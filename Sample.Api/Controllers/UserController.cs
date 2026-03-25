@@ -11,7 +11,7 @@ namespace Sample.Api.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/user")]
+    [Route("v1/user")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
