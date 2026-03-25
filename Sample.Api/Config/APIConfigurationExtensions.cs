@@ -1,34 +1,13 @@
-﻿using Sample.Api.Helpers;
-using Sample.Common.DTOs;
-using Sample.Common.Exceptions;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using Microsoft.OpenApi;
+using Sample.Api.Helpers;
 using System.Reflection;
 
 namespace Sample.Api.Config
 {
     public static class APIConfigurationExtensions
     {
-        public static IApplicationBuilder UseAPIExceptionHandler(this IApplicationBuilder app)
-        {
-            return app.UseExceptionHandler(errorApp =>
-            {
-                errorApp.Run(async context =>
-                {
-                    var handler = context.Features.Get<IExceptionHandlerPathFeature>();
-                    var response = GetErrorResponse(handler);
-                    var content = ErrorToString(response);
-                    context.Response.StatusCode = response.StatusCode;
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync(content);
-                });
-            });
-        }
-
         public static IServiceCollection AddAppValidators(this IServiceCollection services)
         {
             var commonAssembly = Assembly.Load("Sample.Common");
@@ -65,36 +44,6 @@ namespace Sample.Api.Config
             });
 
             return services;
-        }
-
-        private static ErrorResponse GetErrorResponse(IExceptionHandlerPathFeature handler)
-        {
-            var response = new ErrorResponse
-            {
-                StatusCode = handler?.Error switch
-                {
-                    DomainException => StatusCodes.Status400BadRequest,
-                    NotFoundException => StatusCodes.Status404NotFound,
-                    UnauthorizedException => StatusCodes.Status401Unauthorized,
-                    ForbiddenException => StatusCodes.Status403Forbidden,
-                    DuplicateKeyException => StatusCodes.Status409Conflict,
-                    _ => StatusCodes.Status500InternalServerError
-                },
-                Message = handler?.Error?.Message ?? "An error occurred in the application"
-            };
-
-            return response;
-        }
-
-        private static string ErrorToString(ErrorResponse response)
-        {
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore,
-            };
-
-            return JsonConvert.SerializeObject(response, Formatting.None, settings);
         }
     }
 }

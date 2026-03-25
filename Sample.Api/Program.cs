@@ -1,7 +1,7 @@
 using Asp.Versioning;
-using Microsoft.EntityFrameworkCore;
 using Sample.Api.Config;
 using Sample.Api.Helpers;
+using Sample.Api.Middleware;
 using Sample.Core.Config;
 using Sample.Data;
 using Sample.Data.Config;
@@ -70,7 +70,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseAPIExceptionHandler();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
@@ -83,10 +83,8 @@ var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-
-    var context = services.GetRequiredService<DataContext>();
-    context.Database.Migrate();
+    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+    db.Database.EnsureCreated();
 }
 
 try

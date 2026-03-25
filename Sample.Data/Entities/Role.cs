@@ -8,8 +8,15 @@
             Permissions = new HashSet<Permission>();
         }
 
-        public string Description { get; set; }
-        public ICollection<User> Users { get; set; }
-        public ICollection<Permission> Permissions { get; set; }
+        public Role(string description, int id) : base(id)
+        {
+            Description = description;
+            Users = new HashSet<User>();
+            Permissions = new HashSet<Permission>();
+        }
+
+        public string Description { get; private set; }
+        public ICollection<User> Users { get; private set; }
+        public ICollection<Permission> Permissions { get; private set; }
     }
 }

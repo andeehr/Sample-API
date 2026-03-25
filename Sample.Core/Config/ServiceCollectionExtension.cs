@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Sample.Core.Mappers;
 using Sample.Core.Services;
 using Sample.Core.Services.Interfaces;
@@ -13,9 +14,8 @@ namespace Sample.Core.Config
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AllowNullCollections = true;
-
                 cfg.AddProfile<UserProfile>();
-            });
+            }, NullLoggerFactory.Instance);
 
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
