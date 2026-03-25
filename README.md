@@ -1,95 +1,106 @@
+﻿# Sample API Repository
 
-# API Example
+A reference ASP.NET Core Web API project demonstrating Clean Architecture, Domain-Driven Design principles, and modern .NET 10 best practices. This project serves as a showcase of clean code, proper separation of concerns, and robust software architecture.
 
-This is a simple example of an API that aims to integrate multiple behaviors in a straightforward and concise manner.
+## 🚀 Quick Start
 
-The API emulates a registration and login system for an application that has minimal functionality. This application stores users along with their respective roles and permissions. For simplicity, the permissions are predefined (via script), and the roles are sent at the time of registration.
+Get the project up and running in seconds. It uses an in-memory SQLite database, so no external database engine is required!
 
----
+```bash
+# 1. Clone the repository
+git clone <your-repo-url>
+cd Sample
 
-## 🛠️ Technical Details and Considerations
+# 2. Restore dependencies
+dotnet restore
 
-The application is built on **.NET Core 8** with a simple layered architecture and a small database in **SQL Server**.
-
-### 📄 Register
-
-Here is an example request body for the **Register** endpoint:
-
-```json
-{
-  "username": "john.berry",
-  "password": "John.Berry.123!",
-  "firstName": "John",
-  "lastName": "Berry",
-  "roleId": 1
-}
+# 3. Run the API
+cd Sample.Api
+dotnet run
 ```
 
-- The registration endpoint validates some required fields using **FluentValidation**.
-- The password is hashed with **BCrypt.Net-Next** before being stored in the database.
-> **Note:** All endpoints send and receive DTOs. The Core layer is responsible for mapping DTOs to Entities and vice versa.
+**Accessing the API:**
+- Swagger UI / Documentation: `http://localhost:<port>/swagger`
+- The application automatically seeds initial data (including permissions and default users) into the in-memory SQLite database upon startup.
 
----
+## 🏗️ Architecture
 
-### 🔑 Login
+The solution follows a Clean Architecture approach, ensuring the core business logic is isolated from framework-specific implementation details.
 
-An example login request body:
+```text
+┌────────────────────────────────────────────────────────┐
+│                   Sample.Api (Presentation)            │
+│  - Controllers (REST endpoints)                        │
+│  - Middleware (Exception Handling, Logging)            │
+│  - JWT Auth Helpers & Startup Configuration            │
+└───────────────────────────┬────────────────────────────┘
+                            │
+┌───────────────────────────▼────────────────────────────┐
+│                   Sample.Core (Business Logic)         │
+│  - Services (Business use cases)                       │
+│  - Mappers (AutoMapper profiles)                       │
+│  - Dependency Injection Config                         │
+└───────────────────────────┬────────────────────────────┘
+                            │
+┌───────────────────────────▼────────────────────────────┐
+│                   Sample.Common (Shared Resources)     │
+│  - DTOs (Requests, Responses, PagedResults)            │
+│  - Custom Exceptions (Domain, NotFound, etc.)          │
+│  - Validators (FluentValidation rules)                 │
+└────────────────────────────────────────────────────────┘
 
-```json
-{
-  "username": "john.berry",
-  "password": "John.Berry.123!"
-}
+* Note: Persistence logic (Entity Framework Core using SQLite In-Memory) 
+is orchestrated within the Core/Api layers for simplicity in this sample, 
+adhering to repository/service patterns.
 ```
 
-The login endpoint delegates authentication to the **AuthManager** helper service. This service:
+## 🛠️ Tech Stack & Libraries
 
-- Retrieves data from the already validated user from the user service.
-- Generates a **JWT token** and includes it in the response header.
+- **Framework:** .NET 10, C#
+- **Database:** SQLite (In-Memory configuration for sampling)
+- **ORM:** Entity Framework Core
+- **Validation:** FluentValidation
+- **Object Mapping:** AutoMapper
+- **Authentication:** JWT (JSON Web Tokens)
+- **Testing:** xUnit, Moq, AutoFixture, FluentAssertions
 
-For token handling, a wrapper is implemented to manage **JWT token** creation and validation.
-- The **Authorize** annotation helps determine if the user is authenticated and has the necessary permissions to access specific endpoints. This filter ensures that the user’s token is valid and that their roles and permissions are correctly mapped before accessing protected resources.
----
+## 📂 Project Structure
 
-### 🧑‍💻 Get Users
-
-#### **Endpoint:** `GET http://baseUrl/v1/user?{filters}`
-
-You can filter the users by passing query parameters. If no parameters are provided, all users are returned.
-
-#### Example Query Parameters:
-- `pageNumber`: The page number to retrieve.
-- `pageSize`: The number of records per page.
-- `sortingProperty`: The field to sort by.
-- `sortingType`: Ascending | Descending. Default is ascending.
-
-Example request: 
-```
-GET http://baseUrl/v1/user?pageNumber=1&pageSize=10&sortingProperty=firstName
+```text
+Sample/
+├── Sample.Api/              # API Host, Endpoints, Middleware, Auth
+├── Sample.Core/             # Business Logic (Services), Mapping
+├── Sample.Common/           # Cross-cutting: DTOs, Exceptions, Validators
+└── Sample.Test/             # Unit Tests (xUnit, Moq)
 ```
 
-- The abstract class `Filter` is used to handle common attributes like pagination and sorting.
-- **In-memory filtering** is also implemented as an alternative when necessary.
+## 🎯 Best Practices & Key Features
 
-#### Response Structure:
-```json
-{
-  "realRows": 100,
-  "limitRows": 10,
-  "data": [
-    {
-      "username": "john.berry",
-      "firstName": "John",
-      "lastName": "Berry",
-      "role": "SuperUser",
-      "permissions": [
-        "user.list",
-        "user.manage"
-      ]
-    }
-  ]
-}
+This project implements several industry-standard patterns and practices:
+
+- ✅ **Clean Architecture:** Strict separation of concerns between API, Core, and Common logic.
+- ✅ **Centralized Exception Handling:** Custom HTTP Middleware (`ExceptionHandlingMiddleware`) catches domain exceptions and formats standard RFC problem details responses.
+- ✅ **Automated Validation:** `FluentValidation` securely validates incoming requests before processing.
+- ✅ **In-Code Data Seeding:** Permissions, roles, and initial state are seeded automatically in the application logic, bypassing the need for external scripts.
+- ✅ **Secure Authentication:** JWT token generation and validation encapsulated in `Helpers/AuthManager`.
+- ✅ **Meaningful Domain Exceptions:** Specific error handling using `DomainException`, `NotFoundException`, `UnauthorizedException`, etc.
+- ✅ **Comprehensive Unit Testing:** Testing driven by `xUnit`, `Moq`, and custom AutoFixture data attributes (`[DefaultData]`).
+
+## 🧪 Testing
+
+The test suite ensures the reliability of the business services using isolated unit tests.
+
+```bash
+# Run all tests
+cd Sample.Test
+dotnet test
+
+# Run tests with detailed logging
+dotnet test --logger "console;verbosity=detailed"
 ```
 
-The response includes:
-- `PagedResult`: Contains the requested data, the total number of rows, and the number of rows shown.
+Tests follow the **Arrange-Act-Assert (AAA)** pattern and heavily utilize Mock abstractions for deterministic execution.
+
+## 🤝 Contributing
+
+This is a personal portfolio repository intended to showcase architectural patterns and clean code practices. However, suggestions, feedback, and discussions are always welcome in the Issues tab!
