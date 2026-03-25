@@ -86,6 +86,69 @@ This project implements several industry-standard patterns and practices:
 - ✅ **Meaningful Domain Exceptions:** Specific error handling using `DomainException`, `NotFoundException`, `UnauthorizedException`, etc.
 - ✅ **Comprehensive Unit Testing:** Testing driven by `xUnit`, `Moq`, and custom AutoFixture data attributes (`[DefaultData]`).
 
+## 🌐 API Endpoints & Usage
+
+### 🔑 Authentication (Login)
+
+Authenticates a user and issues a JWT token for protected routes.
+
+**POST** `/v1/user/login`
+
+**Request Body:**
+```json
+{
+  "username": "john.berry",
+  "password": "John.Berry.123!"
+}
+```
+
+**Under the Hood:**
+- Authentication is delegated to the `AuthManager` helper service.
+- Upon successful validation, it generates a **JWT token** to be used in subsequent requests.
+- Protected endpoints use a custom `[Authorize]` attribute to validate the token, verify roles, and guarantee the user holds the necessary permissions for that specific resource.
+
+---
+
+### 🧑‍💻 Get Users (Paginated & Filtered)
+
+Retrieves a list of users. If no parameters are provided, it falls back to default pagination settings.
+
+**GET** `/v1/user?pageNumber=1&pageSize=10&sortingProperty=firstName`
+
+**Query Parameters:**
+
+| Parameter         | Description                                      | Default     |
+|-------------------|--------------------------------------------------|-------------|
+| `pageNumber`      | The current page to retrieve.                    | `1`         |
+| `pageSize`        | The number of records per page.                  | `10`        |
+| `sortingProperty` | The exact property/field name to sort the items. |             |
+| `sortingType`     | `Ascending` or `Descending` order.               | `Ascending` |
+
+> 💡 **Tech Note:** An abstract `Filter` base class handles common metadata like pagination and sorting seamlessly. The project architecture supports dynamic data mapping and fallback in-memory filtering when needed.
+
+**Response Structure:**
+
+Returns a structured `PagedResult` object containing the requested slice of data and total row counts.
+
+```json
+{
+  "realRows": 100,
+  "limitRows": 10,
+  "data": [
+    {
+      "username": "john.berry",
+      "firstName": "John",
+      "lastName": "Berry",
+      "role": "SuperUser",
+      "permissions": [
+        "user.list",
+        "user.manage"
+      ]
+    }
+  ]
+}
+```
+
 ## 🧪 Testing
 
 The test suite ensures the reliability of the business services using isolated unit tests.
@@ -104,3 +167,4 @@ Tests follow the **Arrange-Act-Assert (AAA)** pattern and heavily utilize Mock a
 ## 🤝 Contributing
 
 This is a personal portfolio repository intended to showcase architectural patterns and clean code practices. However, suggestions, feedback, and discussions are always welcome in the Issues tab!
+
