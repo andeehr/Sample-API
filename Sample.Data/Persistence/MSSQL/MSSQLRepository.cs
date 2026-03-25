@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Sample.Common.Exceptions;
 using Sample.Data.Entities;
@@ -24,34 +23,7 @@ namespace Sample.Data.Persistence.MSSQL
         protected async Task SaveChanges(bool save)
         {
             if (save)
-            {
-                try
-                {
-                    await _db.SaveChangesAsync();
-                }
-                catch (DbUpdateException ex)
-                {
-                    if (ex.InnerException is SqlException innerException && innerException.Number == 2601)
-                    {
-                        var errorMessage = innerException.Message;
-                        var start = errorMessage.IndexOf('(');
-                        var end = errorMessage.IndexOf(')');
-                        var duplicateValue = "unknown value";
-
-                        if (start != -1 && end != -1)
-                            duplicateValue = errorMessage.Substring(start + 1, end - start - 1);
-
-                        throw new DuplicateKeyException($"An error occurred while saving the record: The value '{duplicateValue}' already exists and cannot be repeated");
-                    }
-
-                    throw new Exception("Unhandled duplicate key error", ex);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error occurred while saving on database");
-                    throw;
-                }
-            }
+                await _db.SaveChangesAsync();
         }
 
         public async Task AddAsync(T entity, bool saveChanges = true)

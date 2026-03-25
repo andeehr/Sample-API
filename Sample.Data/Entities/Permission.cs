@@ -7,7 +7,13 @@
             Roles = new HashSet<Role>();
         }
 
-        public string Description { get; set; }
-        public ICollection<Role> Roles { get; set; }
+        public Permission(string description, int id) : base(id)
+        {
+            Description = description;
+            Roles = new HashSet<Role>();
+        }
+
+        public string Description { get; private set; }
+        public ICollection<Role> Roles { get; private set; }
     }
 }

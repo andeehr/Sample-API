@@ -1,34 +1,38 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Sample.Data.Entities;
 
 namespace Sample.Data
 {
     public class DataContext : DbContext
     {
-        public IConfiguration Configuration { get; private set; }
+        private static readonly SqliteConnection _keepAliveConnection = new("Data Source=:memory:");
+
+        static DataContext()
+        {
+            _keepAliveConnection.Open();
+        }
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
 
-        public DataContext() : base()
-        {
-        }
-
-        public DataContext(IConfiguration configuration) : base()
-            => Configuration = configuration;
-
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var connectionstring = Configuration?.GetConnectionString("DataContext");
-
             if (!options.IsConfigured)
-                options.UseSqlServer(connectionstring);
+                options.UseSqlite(_keepAliveConnection);
+
+            options.LogTo(s => System.Diagnostics.Debug.WriteLine(s),
+                LogLevel.Information);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            InsertSeeds(modelBuilder);
+
             // User
             modelBuilder.Entity<User>(entity =>
             {
@@ -68,6 +72,30 @@ namespace Sample.Data
                 entity.HasMany(e => e.Roles)
                     .WithMany(pr => pr.Permissions);
             });
+        }
+
+        private void InsertSeeds(ModelBuilder modelBuilder)
+        {
+            // Roles
+            modelBuilder.Entity<Role>().HasData(
+                new Role("Admin", 1),
+                new Role("User", 2)
+            );
+
+            // Permissions
+            modelBuilder.Entity<Permission>().HasData(
+                new Permission("read", 1),
+                new Permission("write", 2)
+            );
+
+            modelBuilder.Entity<Role>()
+                .HasMany(r => r.Permissions)
+                .WithMany(p => p.Roles)
+                .UsingEntity(j => j.HasData(
+                    new { RolesId = 1, PermissionsId = 1 }, // Admin - Read
+                    new { RolesId = 1, PermissionsId = 2 }, // Admin - Write
+                    new { RolesId = 2, PermissionsId = 1 }  // User - Read
+                ));
         }
     }
 }
