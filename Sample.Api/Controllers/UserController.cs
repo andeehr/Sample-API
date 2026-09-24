@@ -24,8 +24,11 @@ namespace Sample.Api.Controllers
         }
 
         [HttpPost]
-        public async Task Register([FromBody] UserRequest request)
-            => await _userService.RegisterAsync(request);
+        public async Task<IActionResult> Register([FromBody] UserRequest request)
+        {
+            await _userService.RegisterAsync(request);
+            return StatusCode(StatusCodes.Status201Created);
+        }
 
         [HttpPost("login")]
         public async Task<UserResponse> Login([FromBody] LoginRequest request)
