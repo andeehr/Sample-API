@@ -4,7 +4,7 @@ A reference ASP.NET Core Web API project demonstrating Clean Architecture, Domai
 
 ## 🚀 Quick Start
 
-Get the project up and running in seconds. It uses an in-memory SQLite database, so no external database engine is required!
+Get the project up and running in seconds. It uses an in-memory SQLite database, so no external database engine is required. The commands below are run from the repository root.
 
 ```bash
 # 1. Clone the repository
@@ -12,11 +12,13 @@ git clone <your-repo-url>
 cd Sample
 
 # 2. Restore dependencies
-dotnet restore
+dotnet restore Sample.slnx
 
-# 3. Run the API
-cd Sample.Api
-dotnet run
+# 3. Build the solution
+dotnet build Sample.slnx --no-restore
+
+# 4. Run the API
+dotnet run --project src/Sample.Api/Sample.Api.csproj
 ```
 
 **Accessing the API:**
@@ -68,10 +70,14 @@ adhering to repository/service patterns.
 
 ```text
 Sample/
-├── Sample.Api/              # API Host, Endpoints, Middleware, Auth
-├── Sample.Core/             # Business Logic (Services), Mapping
-├── Sample.Common/           # Cross-cutting: DTOs, Exceptions, Validators
-└── Sample.Test/             # Unit Tests (xUnit, Moq)
+├── Sample.slnx              # Solution file
+├── src/
+│   ├── Sample.Api/           # API Host, Endpoints, Middleware, Auth
+│   ├── Sample.Core/          # Business Logic (Services), Mapping
+│   ├── Sample.Data/          # Persistence and Entity Framework Core
+│   └── Sample.Common/        # Cross-cutting: DTOs, Exceptions, Validators
+└── tests/
+  └── Sample.Test/          # Unit Tests (xUnit, Moq)
 ```
 
 ## 🎯 Best Practices & Key Features
@@ -155,11 +161,10 @@ The test suite ensures the reliability of the business services using isolated u
 
 ```bash
 # Run all tests
-cd Sample.Test
-dotnet test
+dotnet test Sample.slnx
 
 # Run tests with detailed logging
-dotnet test --logger "console;verbosity=detailed"
+dotnet test tests/Sample.Test/Sample.Test.csproj --logger "console;verbosity=detailed"
 ```
 
 Tests follow the **Arrange-Act-Assert (AAA)** pattern and heavily utilize Mock abstractions for deterministic execution.
