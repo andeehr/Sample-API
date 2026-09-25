@@ -7,8 +7,10 @@ namespace Sample.Core.Services.Interfaces
     {
         Task<PagedResult<UserResponse>> GetAllByFilters(UserFilter request);
 
+        Task<UserResponse> GetById(long id);
+
         Task<UserResponse> LoginAsync(string user, string password);
 
-        Task RegisterAsync(UserRequest request);
+        Task<UserResponse> RegisterAsync(UserRequest request);
     }
 }

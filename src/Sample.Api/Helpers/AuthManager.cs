@@ -6,6 +6,7 @@ namespace Sample.Api.Helpers
     public interface IAuthManager
     {
         Task<UserResponse> AuthenticateAsync(HttpContext httpContext, string username, string password);
+        void Logout(HttpContext httpContext);
     }
 
     public class AuthManager : IAuthManager
@@ -29,11 +30,25 @@ namespace Sample.Api.Helpers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
+                Path = "/",
                 Expires = DateTime.UtcNow.AddHours(24),
             };
 
             httpContext.Response.Cookies.Append("auth-token", token, authCookie);
             return user;
+        }
+
+        public void Logout(HttpContext httpContext)
+        {
+            ArgumentNullException.ThrowIfNull(httpContext);
+
+            httpContext.Response.Cookies.Delete("auth-token", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/",
+            });
         }
     }
 }

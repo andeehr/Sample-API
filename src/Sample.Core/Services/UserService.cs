@@ -39,12 +39,19 @@ namespace Sample.Core.Services
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 
-        public async Task RegisterAsync(UserRequest request)
+        public async Task<UserResponse> RegisterAsync(UserRequest request)
         {
             _validatorService.Validate(request);
             request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var user = _mapper.Map<User>(request);
             await _userRepository.AddAsync(user);
+            return await GetById(user.Id);
+        }
+
+        public async Task<UserResponse> GetById(long id)
+        {
+            var user = await _userRepository.GetByIdAsync(id, u => u.Role, u => u.Role.Permissions);
+            return _mapper.Map<UserResponse>(user);
         }
 
         public async Task<PagedResult<UserResponse>> GetAllByFilters(UserFilter request)

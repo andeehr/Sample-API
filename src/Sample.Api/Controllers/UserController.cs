@@ -26,13 +26,25 @@ namespace Sample.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserRequest request)
         {
-            await _userService.RegisterAsync(request);
-            return StatusCode(StatusCodes.Status201Created);
+            var user = await _userService.RegisterAsync(request);
+            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
         }
+
+        [HttpGet("{id:long}")]
+        [Authorize(Permission.User.List)]
+        public async Task<UserResponse> GetById(long id)
+            => await _userService.GetById(id);
 
         [HttpPost("login")]
         public async Task<UserResponse> Login([FromBody] LoginRequest request)
             => await _authManager.AuthenticateAsync(HttpContext, request.Username, request.Password);
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            _authManager.Logout(HttpContext);
+            return NoContent();
+        }
 
         [HttpGet]
         [Authorize(Permission.User.List)]

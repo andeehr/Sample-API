@@ -113,6 +113,14 @@ Authenticates a user and issues a JWT token for protected routes.
 - Upon successful validation, it generates a **JWT token** to be used in subsequent requests.
 - Protected endpoints use a custom `[Authorize]` attribute to validate the token, verify roles, and guarantee the user holds the necessary permissions for that specific resource.
 
+### 🔒 Logout
+
+Clears the authentication cookie from the browser.
+
+**POST** `/v1/user/logout`
+
+Returns `204 No Content`. The endpoint is safe to call when no authentication cookie is present.
+
 ---
 
 ### 🧑‍💻 Get Users (Paginated & Filtered)
